@@ -49,7 +49,7 @@ Berikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal.
 
 1.  **Clone Repository**
     ```bash
-    git clone [https://github.com/mizzcode/pulsecare.git](https://github.com/mizzcode/pulsecare.git)
+    git clone https://github.com/mizzcode/pulsecare.git
     cd pulsecare
     ```
 
