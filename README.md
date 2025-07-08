@@ -79,7 +79,7 @@ Berikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal.
 6.  **Jalankan Migrasi dan Seeder**
     Perintah ini akan membuat semua tabel database dan mengisinya dengan data awal (role, user, pertanyaan, dll).
     ```bash
-    php artisan migrate:fresh --seed
+    php artisan migrate --seed
     ```
 
 7.  **Jalankan Server**
