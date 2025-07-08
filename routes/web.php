@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Settings;
-use App\Http\Controllers\History;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {

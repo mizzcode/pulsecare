@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\AssesmentResult;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 use Illuminate\View\View;
-use Carbon\Carbon;
 
 class HistoryController extends Controller
 {
@@ -14,56 +14,44 @@ class HistoryController extends Controller
     {
         $userId = Auth::id();
 
-        // 1. Tentukan rentang tanggal 7 hari secara eksplisit
         $endDate = now();
-        $startDate = now()->subDays(6)->startOfDay(); // 7 hari termasuk hari ini
+        $startDate = now()->subDays(6)->startOfDay();
 
-        // 2. Ambil data assesment dalam rentang tanggal tersebut
-        $assessmentsForChart = AssesmentResult::where('user_id', $userId)
+        $assessmentsInPeriod = AssesmentResult::where('user_id', $userId)
             ->where('created_at', '>=', $startDate)
-            ->where('created_at', '<=', $endDate)
-            ->orderBy('created_at', 'asc')
-            ->get();
+            ->get()
+            ->groupBy(function ($date) {
+                return Carbon::parse($date->created_at)->format('Y-m-d');
+            });
 
-        // 3. Buat array untuk menampung semua data assessment + data kosong untuk hari tanpa assessment
         $depressionData = [];
         $anxietyData = [];
         $stressData = [];
 
-        // Loop untuk setiap hari dalam rentang 7 hari
-        for ($i = 0; $i < 7; $i++) {
-            $currentDate = $startDate->copy()->addDays($i);
+        for ($i = 6; $i >= 0; $i--) {
+            $loopDate = now()->subDays($i)->startOfDay();
+            $dateString = $loopDate->format('Y-m-d');
 
-            // Cari semua assessment untuk hari ini
-            $dayAssessments = $assessmentsForChart->filter(function ($assessment) use ($currentDate) {
-                return $assessment->created_at->isSameDay($currentDate);
-            });
-
-            // Jika ada assessment di hari ini, tambahkan semua ke chart
-            if ($dayAssessments->isNotEmpty()) {
-                foreach ($dayAssessments as $assessment) {
-                    $dateForChart = $assessment->created_at->toIso8601String();
-
-                    $depressionData[] = ['x' => $dateForChart, 'y' => $assessment->depression_score];
-                    $anxietyData[] = ['x' => $dateForChart, 'y' => $assessment->anxiety_score];
-                    $stressData[] = ['x' => $dateForChart, 'y' => $assessment->stress_score];
+            // Cek apakah ada data asesmen pada tanggal ini
+            if (isset($assessmentsInPeriod[$dateString])) {
+                // Jika ada, tambahkan setiap assessment pada hari itu sebagai titik data terpisah
+                foreach ($assessmentsInPeriod[$dateString] as $assessment) {
+                    $depressionData[] = ['x' => $assessment->created_at->toIso8601String(), 'y' => $assessment->depression_score];
+                    $anxietyData[] = ['x' => $assessment->created_at->toIso8601String(), 'y' => $assessment->anxiety_score];
+                    $stressData[] = ['x' => $assessment->created_at->toIso8601String(), 'y' => $assessment->stress_score];
                 }
             } else {
-                // Jika tidak ada assessment di hari ini, buat titik dengan nilai 0 di tengah hari
-                $dateForChart = $currentDate->copy()->setTime(12, 0, 0)->toIso8601String();
-
-                $depressionData[] = ['x' => $dateForChart, 'y' => 0];
-                $anxietyData[] = ['x' => $dateForChart, 'y' => 0];
-                $stressData[] = ['x' => $dateForChart, 'y' => 0];
+                // Jika tidak ada assessment di hari ini, buat satu titik dengan nilai 0
+                $depressionData[] = ['x' => $loopDate->copy()->setTime(12, 0, 0)->toIso8601String(), 'y' => 0];
+                $anxietyData[] = ['x' => $loopDate->copy()->setTime(12, 0, 0)->toIso8601String(), 'y' => 0];
+                $stressData[] = ['x' => $loopDate->copy()->setTime(12, 0, 0)->toIso8601String(), 'y' => 0];
             }
         }
 
-        // 4. Ambil semua data untuk ditampilkan di tabel riwayat
         $tableAssessments = AssesmentResult::where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($assessment) {
-                // Tentukan level terparah untuk ditampilkan di tabel
                 $levels = [
                     'Sangat Berat' => 4,
                     'Berat' => 3,
@@ -80,6 +68,7 @@ class HistoryController extends Controller
                 $highestLevel = array_search($highestLevelValue, $levels);
 
                 return [
+                    'id' => $assessment->id,
                     'date' => $assessment->created_at->format('d M Y H:i'),
                     'depression' => $assessment->depression_score,
                     'anxiety' => $assessment->anxiety_score,
@@ -88,7 +77,6 @@ class HistoryController extends Controller
                 ];
             });
 
-        // 5. Hitung statistik untuk summary card
         $totalAssessments = $tableAssessments->count();
         $averageScore = $totalAssessments > 0 ? number_format(
             ($tableAssessments->sum('depression') + $tableAssessments->sum('anxiety') + $tableAssessments->sum('stress')) /
@@ -96,7 +84,6 @@ class HistoryController extends Controller
             2
         ) : '0.00';
 
-        // 6. Kirim data ke view, termasuk batas tanggal untuk chart
         return view('assesment.history', [
             'depressionData' => $depressionData,
             'anxietyData' => $anxietyData,
