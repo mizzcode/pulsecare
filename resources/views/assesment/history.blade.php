@@ -43,18 +43,7 @@
                         backgroundColor: 'rgba(59, 130, 246, 0.2)',
                         fill: true,
                         tension: 0.4,
-                        borderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        pointBackgroundColor: 'rgba(245, 158, 11, 1)',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointBackgroundColor: 'rgba(34, 197, 94, 1)',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2
+                        borderWidth: 2
                     },
                     {
                         label: 'Kecemasan',
@@ -63,9 +52,7 @@
                         backgroundColor: 'rgba(34, 197, 94, 0.2)',
                         fill: true,
                         tension: 0.4,
-                        borderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
+                        borderWidth: 2
                     },
                     {
                         label: 'Stres',
@@ -74,9 +61,7 @@
                         backgroundColor: 'rgba(245, 158, 11, 0.2)',
                         fill: true,
                         tension: 0.4,
-                        borderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
+                        borderWidth: 2
                     }
                 ]
             },
@@ -91,10 +76,12 @@
                     },
                     x: {
                         type: 'time',
+                        min: '{{ $chartMinDate }}',
+                        max: '{{ $chartMaxDate }}',
                         time: {
                             unit: 'day',
-                            displayFormats: { day: 'MMM dd' },
-                            tooltipFormat: 'MMM dd, yyyy HH:mm'
+                            displayFormats: { day: 'dd MMM' },
+                            tooltipFormat: 'dd MMM yy, HH:mm'
                         },
                         title: { display: true, text: 'Tanggal' }
                     },
@@ -105,11 +92,6 @@
                         mode: 'index',
                         intersect: false,
                     }
-                },
-                interaction: {
-                    mode: 'nearest',
-                    axis: 'x',
-                    intersect: false
                 }
             }
         });">
@@ -117,14 +99,15 @@
         </div>
     </div>
 
-    <!-- Assessment History Table -->
-    <div
+    <!-- Assessment History Table with Alpine.js Pagination -->
+    <div x-data="pagination({{ json_encode($allAssessments) }})"
         class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 max-w-4xl mx-auto border border-gray-200 dark:border-gray-700">
         <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Daftar Riwayat Assesment</h2>
         <div class="overflow-x-auto">
             <table class="w-full text-left">
                 <thead class="bg-gray-50 dark:bg-gray-700">
                     <tr>
+                        <th class="p-4 text-gray-600 dark:text-gray-300 font-medium">#</th>
                         <th class="p-4 text-gray-600 dark:text-gray-300 font-medium">Tanggal</th>
                         <th class="p-4 text-gray-600 dark:text-gray-300 font-medium">Depresi</th>
                         <th class="p-4 text-gray-600 dark:text-gray-300 font-medium">Kecemasan</th>
@@ -133,32 +116,80 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($allAssessments as $assessment)
+                    <template x-for="(assessment, index) in paginatedItems" :key="assessment.id">
                         <tr
                             class="border-t border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                            <td class="p-4">{{ $assessment['date'] }}</td>
-                            <td class="p-4">{{ $assessment['depression'] }}</td>
-                            <td class="p-4">{{ $assessment['anxiety'] }}</td>
-                            <td class="p-4">{{ $assessment['stress'] }}</td>
-                            <td
-                                class="p-4 font-medium {{ strtolower($assessment['level']) === 'sangat berat' || strtolower($assessment['level']) === 'berat'
-                                    ? 'text-red-500'
-                                    : (strtolower($assessment['level']) === 'sedang'
-                                        ? 'text-yellow-500'
-                                        : '') }}">
-                                {{ $assessment['level'] }}
+                            <td class="p-4" x-text="(currentPage - 1) * itemsPerPage + index + 1"></td>
+                            <td class="p-4" x-text="assessment.date"></td>
+                            <td class="p-4" x-text="assessment.depression"></td>
+                            <td class="p-4" x-text="assessment.anxiety"></td>
+                            <td class="p-4" x-text="assessment.stress"></td>
+                            <td class="p-4 font-medium"
+                                :class="{
+                                    'text-red-500': assessment.level.toLowerCase() === 'sangat berat' || assessment
+                                        .level.toLowerCase() === 'berat',
+                                    'text-yellow-500': assessment.level.toLowerCase() === 'sedang'
+                                }"
+                                x-text="assessment.level">
                             </td>
                         </tr>
-                    @empty
+                    </template>
+                    <template x-if="items.length === 0">
                         <tr>
-                            <td colspan="5" class="p-4 text-center text-gray-500 dark:text-gray-400">
+                            <td colspan="6" class="p-4 text-center text-gray-500 dark:text-gray-400">
                                 Tidak ada riwayat assesment.
                             </td>
                         </tr>
-                    @endforelse
+                    </template>
                 </tbody>
             </table>
         </div>
+
+        <!-- Pagination Controls -->
+        <div class="mt-6 flex items-center justify-between">
+            <span class="text-sm text-gray-600 dark:text-gray-400">
+                Menampilkan <span x-text="items.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0"></span> - <span
+                    x-text="Math.min(currentPage * itemsPerPage, items.length)"></span> dari <span
+                    x-text="items.length"></span> data
+            </span>
+            <div class="flex space-x-2">
+                <button @click="prevPage" :disabled="currentPage === 1"
+                    class="px-4 py-2 text-sm bg-gray-200 dark:bg-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                    Sebelumnya
+                </button>
+                <button @click="nextPage" :disabled="currentPage === totalPages"
+                    class="px-4 py-2 text-sm bg-gray-200 dark:bg-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                    Selanjutnya
+                </button>
+            </div>
+        </div>
     </div>
 
+    <script>
+        function pagination(items) {
+            return {
+                items: items,
+                currentPage: 1,
+                itemsPerPage: 7,
+                get totalPages() {
+                    return Math.ceil(this.items.length / this.itemsPerPage);
+                },
+                get paginatedItems() {
+                    const start = (this.currentPage - 1) * this.itemsPerPage;
+                    const end = start + this.itemsPerPage;
+                    return this.items.slice(start, end);
+                },
+                nextPage() {
+                    if (this.currentPage < this.totalPages) {
+                        this.currentPage++;
+                    }
+                },
+                prevPage() {
+                    if (this.currentPage > 1) {
+                        this.currentPage--;
+                    }
+                }
+            }
+        }
+    </script>
 </x-layouts.app>
