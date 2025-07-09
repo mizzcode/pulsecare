@@ -6,7 +6,7 @@
             @forelse ($doctors as $doctor)
                 <div
                     class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                    <img src="{{ $doctor->photo ? asset('storage/' . $user->photo) : asset('images/default-avatar.jpg') }}"
+                    <img src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('images/default-avatar.jpg') }}"
                         alt="{{ $doctor->name }}" class="w-full object-cover">
                     <div class="p-4">
                         <h2 class="text-xl font-semibold text-gray-800">{{ $doctor->name }}</h2>
