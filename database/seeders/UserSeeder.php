@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
             'email' => 'mizz@gmail.com',
             'password' => 'password',
             'role_id' => 1,
-            'phone' => '081286558895',
+            'phone' => '6281286558895',
             'email_verified_at' => now(),
         ]);
         User::create([
@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             'email' => 'al@gmail.com',
             'password' => 'password',
             'role_id' => 2,
-            'phone' => '08885975765',
+            'phone' => '628885975765',
             'photo' => 'cewek_1.png',
             'email_verified_at' => now(),
         ]);
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
             'email' => 'el@gmail.com',
             'password' => 'password',
             'role_id' => 2,
-            'phone' => '089525256091',
+            'phone' => '6289525256091',
             'photo' => 'cewek_2.png',
             'email_verified_at' => now(),
         ]);
@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
             'email' => 'jen@gmail.com',
             'password' => 'password',
             'role_id' => 2,
-            'phone' => '08978067321',
+            'phone' => '628978067321',
             'photo' => 'cewek_3.png',
             'email_verified_at' => now(),
         ]);
@@ -52,7 +52,7 @@ class UserSeeder extends Seeder
             'email' => 'misbah@gmail.com',
             'password' => 'password',
             'role_id' => 3,
-            'phone' => '081286558895',
+            'phone' => '6281286558895',
             'email_verified_at' => now(),
         ]);
     }
