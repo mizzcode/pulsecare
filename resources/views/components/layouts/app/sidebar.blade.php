@@ -10,9 +10,9 @@
                                 :active="request()->routeIs('dashboard*')">Dashboard</x-layouts.sidebar-link>
 
                             <x-layouts.sidebar-two-level-link-parent title="Kuisioner" icon="fas-clipboard-list"
-                                :active="request()->routeIs('kuisioner.*')">
+                                :active="request()->routeIs(['kuisioner.index', 'history.index', 'kuisioner.create'])">
                                 <x-layouts.sidebar-two-level-link href="{{ route('kuisioner.create') }}" icon='fas-plus'
-                                    :active="request()->routeIs('kuisioner.index')">Buat
+                                    :active="request()->routeIs(['kuisioner.create', 'kuisioner.index'])">Buat
                                     baru</x-layouts.sidebar-two-level-link>
                                 <x-layouts.sidebar-two-level-link href="{{ route('history.index') }}" icon='fas-clock-rotate-left'
                                     :active="request()->routeIs('history.index')">Riwayat</x-layouts.sidebar-two-level-link>

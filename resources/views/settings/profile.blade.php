@@ -19,7 +19,7 @@
     <!-- Page Title -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">{{ __('Profile') }}</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('Update your name and email address') }}</p>
+        <p class="text-gray-600 dark:text-gray-400 mt-1">{{ __('Update your profile details') }}</p>
     </div>
 
     <div class="p-6">
@@ -33,17 +33,69 @@
                     class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
                     <div class="p-6">
                         <!-- Profile Form -->
-                        <form class="max-w-md mb-10" action="{{ route('settings.profile.update') }}" method="POST">
+                        <form class="max-w-md mb-10" action="{{ route('settings.profile.update') }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
+                            <!-- Profile Photo -->
+                            <div class="mb-6">
+                                <label
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('Profile Photo') }}</label>
+                                <div class="flex items-center gap-4">
+                                    <img src="{{ $user->photo ? asset('storage/' . $user->photo) : asset('images/default-avatar.jpg') }}"
+                                        alt="{{ $user->name }}"
+                                        class="w-20 h-20 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600">
+                                    <input type="file" name="photo" id="photo"
+                                        class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-gray-700 dark:file:text-gray-200">
+                                </div>
+                                @error('photo')
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Name Input -->
                             <div class="mb-4">
                                 <x-forms.input label="Name" name="name" type="text"
                                     value="{{ old('name', $user->name) }}" />
                             </div>
 
-                            <div class="mb-6">
+                            <!-- Email Input -->
+                            <div class="mb-4">
                                 <x-forms.input label="Email" name="email" type="email"
                                     value="{{ old('email', $user->email) }}" />
+                            </div>
+
+                            <!-- Birthdate Input -->
+                            <div class="mb-4">
+                                <x-forms.date-picker label="Birthdate" name="birthdate"
+                                    value="{{ old('birthdate', $user->birthdate) }}" />
+                            </div>
+
+                            <!-- Phone Input -->
+                            <div class="mb-4">
+                                <x-forms.input label="Phone" name="phone" type="text"
+                                    value="{{ old('phone', $user->phone) }}" />
+                            </div>
+
+                            <!-- Gender Input -->
+                            <div class="mb-4">
+                                <label for="gender"
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Gender') }}</label>
+                                <select name="gender" id="gender"
+                                    class="mt-1 block w-full bg-gray-100 rounded-md py-2.5 px-3 border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                                    <option disabled value=""
+                                        {{ old('gender', $user->gender) == '' ? 'selected' : '' }}>
+                                        {{ __('Select Gender') }}</option>
+                                    <option value="Pria"
+                                        {{ old('gender', $user->gender) == 'Pria' ? 'selected' : '' }}>
+                                        {{ __('Male') }}</option>
+                                    <option value="Wanita"
+                                        {{ old('gender', $user->gender) == 'Wanita' ? 'selected' : '' }}>
+                                        {{ __('Female') }}</option>
+                                </select>
+                                @error('gender')
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div>

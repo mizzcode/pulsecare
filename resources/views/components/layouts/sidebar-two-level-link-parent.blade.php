@@ -10,11 +10,11 @@
         }
     " @class([
         'flex items-center justify-between w-full px-3 py-2 text-sm rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-        'bg-sidebar-accent text-sidebar-accent-foreground font-medium' => $active,
-        'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground' => !$active,
+        'bg-gray-400 text-sidebar-accent-foreground font-medium dark:text-white' => $active,
+        'hover:bg-gray-400 hover:cursor-pointer hover:font-bold hover:text-sidebar-accent-foreground text-sidebar-foreground dark:text-white' => !$active,
     ])>
         <div class="flex items-center">
-            @svg($icon, $active ? 'w-5 h-5 text-gray-500' : 'w-5 h-5 text-gray-500')
+            @svg($icon, $active ? 'w-5 h-5 text-white-500' : 'w-5 h-5 text-white-500')
             <span :class="{ 'opacity-0 hidden ml-0': !sidebarOpen, 'ml-3': sidebarOpen }"
                 class="transition-opacity duration-300">{{ $title }}</span>
         </div>

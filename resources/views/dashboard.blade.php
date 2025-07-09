@@ -7,7 +7,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         <!-- Total Users Card -->
-        @if (Auth::user()->role->name != 'admin')
+        @if (Auth::user()?->role?->name === 'admin')
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-center justify-between">
                     <div>

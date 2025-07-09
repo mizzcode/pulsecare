@@ -23,11 +23,16 @@ class RegistrationController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'birthdate' => ['nullable', 'date'],
+            'gender' => ['nullable', 'in:Pria,Wanita'],
+            'phone' => ['nullable', 'string', 'max:15'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
+
+        $validated['role_id'] = 3;
 
         event(new Registered(($user = User::create($validated))));
 

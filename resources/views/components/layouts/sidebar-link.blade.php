@@ -2,10 +2,10 @@
 <li>
     <a href="{{ $href }}" @class([
         'flex items-center px-3 py-2 text-sm rounded-md transition-colors duration-200',
-        'bg-sidebar-accent text-sidebar-accent-foreground font-medium' => $active,
-        'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground' => !$active,
+        'bg-gray-400 text-sidebar-accent-foreground font-bold dark:text-white' => $active,
+        'hover:bg-gray-400 hover:text-white hover:font-bold text-sidebar-foreground' => !$active,
     ])>
-        @svg($icon, $active ? 'w-5 h-5 text-gray-500' : 'w-5 h-5 text-gray-500')
+        @svg($icon, $active ? 'w-5 h-5 text-white-500' : 'w-5 h-5 text-white-500')
         <span :class="{ 'hidden ml-0': !sidebarOpen, 'ml-3': sidebarOpen }"
             x-transition:enter="transition-opacity duration-300" x-transition:enter-start="opacity-0"
             x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity duration-300"

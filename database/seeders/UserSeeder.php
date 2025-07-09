@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
             'password' => 'password',
             'role_id' => 2,
             'phone' => '628885975765',
-            'photo' => 'cewek_1.png',
+            'photo' => 'photos/cewek_1.png',
             'email_verified_at' => now(),
         ]);
         User::create([
@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
             'password' => 'password',
             'role_id' => 2,
             'phone' => '6289525256091',
-            'photo' => 'cewek_2.png',
+            'photo' => 'photos/cewek_2.png',
             'email_verified_at' => now(),
         ]);
         User::create([
@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
             'password' => 'password',
             'role_id' => 2,
             'phone' => '628978067321',
-            'photo' => 'cewek_3.png',
+            'photo' => 'photos/cewek_3.png',
             'email_verified_at' => now(),
         ]);
         User::create([

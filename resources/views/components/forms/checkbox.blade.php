@@ -1,4 +1,4 @@
-@props(['label', 'name', 'value' => null])
+@props(['label', 'name', 'value' => 1])
 
 <label for="{{ $name }}"
     {{ $attributes->merge(['class' => 'ml-2 block text-sm text-gray-700 dark:text-gray-300']) }}>
