@@ -20,6 +20,9 @@
 
                             <x-layouts.sidebar-two-level-link href="{{ route('recommendation.index') }}"
                                 icon='fas-lightbulb' :active="request()->routeIs('recommendation.index')">Recommendation</x-layouts.sidebar-two-level-link>
+
+                            <x-layouts.sidebar-two-level-link href="{{ route('dokter.index') }}"
+                                icon='fas-lightbulb' :active="request()->routeIs('dokter.index')">Chat Dokter</x-layouts.sidebar-two-level-link>
                         </ul>
                     </nav>
                 </div>

@@ -17,6 +17,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('kuisioner/history', [Dashboard\HistoryController::class, 'index'])->name('history.index');
 
     Route::get('recommendation', [Dashboard\RecommendationController::class, 'index'])->name('recommendation.index');
+    
+    Route::get('chat/dokter', [Dashboard\DokterController::class, 'index'])->name('dokter.index');
 
     Route::get('settings/profile', [Settings\ProfileController::class, 'edit'])->name('settings.profile.edit');
     Route::put('settings/profile', [Settings\ProfileController::class, 'update'])->name('settings.profile.update');

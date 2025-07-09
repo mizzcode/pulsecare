@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->date('birthdate')->nullable();
             $table->enum('gender', ['Pria', 'Wanita'])->nullable();
+            $table->string('phone', 15)->nullable();
+            $table->string('photo')->nullable();
             $table->foreignId('role_id')->nullable()->constrained('roles')->onDelete('set null')->default(1);
             $table->rememberToken();
             $table->timestamps();
