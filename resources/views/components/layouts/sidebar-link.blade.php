@@ -2,8 +2,8 @@
 <li>
     <a href="{{ $href }}" @class([
         'flex items-center px-3 py-2 text-sm rounded-md transition-colors duration-200',
-        'bg-gray-400 text-sidebar-accent-foreground font-bold dark:text-white' => $active,
-        'hover:bg-gray-400 hover:text-white hover:font-bold text-sidebar-foreground' => !$active,
+        'bg-blue-400 text-sidebar-accent-foreground font-bold dark:text-white' => $active,
+        'hover:bg-blue-400 hover:text-white hover:font-bold text-sidebar-foreground' => !$active,
     ])>
         @svg($icon, $active ? 'w-5 h-5 text-white-500' : 'w-5 h-5 text-white-500')
         <span :class="{ 'hidden ml-0': !sidebarOpen, 'ml-3': sidebarOpen }"
