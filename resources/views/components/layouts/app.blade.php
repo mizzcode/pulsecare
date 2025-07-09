@@ -15,9 +15,9 @@
                 })
             }
             if (appearance === 'system') {
-                let media = window.matchMedia('(prefers-color-scheme: dark)')
+                let media = window.matchMedia('(prefers-color-scheme: light)')
                 window.localStorage.removeItem('appearance')
-                media.matches ? setDark() : setLight()
+                media.matches ? setLight() : setDark()
             } else if (appearance === 'dark') {
                 window.localStorage.setItem('appearance', 'dark')
                 setDark()
@@ -31,7 +31,7 @@
                 document.addEventListener("DOMContentLoaded", () => setButtons(appearance))
             }
         }
-        window.setAppearance(window.localStorage.getItem('appearance') || 'system')
+        window.setAppearance(window.localStorage.getItem('appearance') || 'light')
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

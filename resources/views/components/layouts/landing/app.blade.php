@@ -1,3 +1,5 @@
+@props(['title'])
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -5,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>PulseCare - Pantau Stresmu</title>
+    <title>{{ $title }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         @keyframes float {
@@ -80,22 +82,46 @@
     </style>
 </head>
 
-<body class="bg-gradient-to-br from-blue-400 via-purple-500 to-purple-600 min-h-screen">
-    <header class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-lg shadow-lg">
-        <nav class="container mx-auto px-6 py-4">
+<body class="bg-gray-50 min-h-screen">
+    <header class="fixed w-full top-0 z-50 bg-gray-50 backdrop-blur-lg shadow-lg">
+        <nav class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
                 <a href="{{ route('home') }}"
                     class="text-3xl font-bold text-blue-500 hover:scale-105 transition-transform">
                     PulseCare
                 </a>
-                <div class="hidden md:flex space-x-8 items-center">
-                    <a href="{{ route('login') }}"
-                        class="text-gray-700 hover:text-blue-500 font-medium transition-colors">Masuk</a>
-                    <a href="{{ route('register') }}"
-                        class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 hover:shadow-lg transform hover:-translate-y-1 transition-all">
-                        Daftar
-                    </a>
-                </div>
+                @if (Auth::check())
+                    <!-- Mobile Menu -->
+                    <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
+                        <div class="flex flex-col space-y-4">
+                            <a href="{{ route('dashboard') }}"
+                                class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 text-center transition-all">
+                                Masuk Dashboard
+                            </a>
+                        </div>
+                    </div>
+                @else
+                    <div class="hidden md:flex space-x-8 items-center">
+                        <a href="{{ route('login') }}"
+                            class="text-gray-700 hover:text-blue-500 font-medium transition-colors">Masuk</a>
+                        <a href="{{ route('register') }}"
+                            class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 hover:shadow-lg transform hover:-translate-y-1 transition-all">
+                            Daftar
+                        </a>
+                    </div>
+
+                    <!-- Mobile Menu -->
+                    <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
+                        <div class="flex flex-col space-y-4">
+                            <a href="{{ route('login') }}"
+                                class="text-gray-700 hover:text-blue-500 font-medium transition-colors">Masuk</a>
+                            <a href="{{ route('register') }}"
+                                class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 text-center transition-all">
+                                Daftar
+                            </a>
+                        </div>
+                    </div>
+                @endif
                 <!-- Mobile Menu Button -->
                 <button id="mobile-menu-button" class="md:hidden text-gray-700 hover:text-blue-500">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,21 +130,10 @@
                     </svg>
                 </button>
             </div>
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
-                <div class="flex flex-col space-y-4">
-                    <a href="{{ route('login') }}"
-                        class="text-gray-700 hover:text-blue-500 font-medium transition-colors">Masuk</a>
-                    <a href="{{ route('register') }}"
-                        class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 text-center transition-all">
-                        Daftar
-                    </a>
-                </div>
-            </div>
         </nav>
     </header>
 
-    <main class="pt-20">
+    <main class="pt-32 md:pt-0">
         {{ $slot }}
     </main>
 
