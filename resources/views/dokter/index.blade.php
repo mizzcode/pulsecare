@@ -7,7 +7,7 @@
                 <div
                     class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                     <img src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : 'https://picsum.photos/300/200?random' }}"
-                        alt="Doctor Image" class="w-full object-cover h-full">
+                        alt="Doctor Image" class="w-full object-cover">
                     <div class="p-4">
                         <h2 class="text-xl font-semibold text-gray-800">{{ $doctor->name }}</h2>
                         @if (isset($doctor->role) && $doctor->role)
