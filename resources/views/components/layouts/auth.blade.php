@@ -7,34 +7,36 @@
     <title>Login - {{ config('app.name') }}</title>
     @vite('resources/css/app.css')
     <script>
-        function applyTheme() {
-            const userPref = localStorage.getItem('darkMode');
-            const systemPref = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (userPref === 'true' || (userPref === null && systemPref)) {
-                document.documentElement.classList.add('dark');
+        window.setAppearance = function(appearance) {
+            let setDark = () => document.documentElement.classList.add('dark')
+            let setLight = () => document.documentElement.classList.remove('dark')
+            let setButtons = (appearance) => {
+                document.querySelectorAll('button[onclick^="setAppearance"]').forEach((button) => {
+                    button.setAttribute('aria-pressed', String(appearance === button.value))
+                })
+            }
+            if (appearance === 'system') {
+                let media = window.matchMedia('(prefers-color-scheme: light)')
+                window.localStorage.removeItem('appearance')
+                media.matches ? setLight() : setDark() // Fixed: sekarang benar
+            } else if (appearance === 'dark') {
+                window.localStorage.setItem('appearance', 'dark')
+                setDark()
+            } else if (appearance === 'light') {
+                window.localStorage.setItem('appearance', 'light')
+                setLight()
+            }
+            if (document.readyState === 'complete') {
+                setButtons(appearance)
             } else {
-                document.documentElement.classList.remove('dark');
+                document.addEventListener("DOMContentLoaded", () => setButtons(appearance))
             }
         }
-        // Initial theme application
-        applyTheme();
-        // Listen for system theme changes
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            if (!('darkMode' in localStorage)) {
-                applyTheme();
-            }
-        });
+        window.setAppearance(window.localStorage.getItem('appearance') || 'light')
     </script>
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 antialiased" x-data="{
-    darkMode: localStorage.getItem('darkMode') === 'true',
-    toggleDarkMode() {
-        this.darkMode = !this.darkMode;
-        localStorage.setItem('darkMode', this.darkMode);
-    }
-}"
-    :class="{ 'dark': darkMode }">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 antialiased">
 
     <div class="min-h-screen flex flex-col">
         <!-- Main Content -->

@@ -2,76 +2,41 @@
 
     <!-- Hero Section -->
     <section class="min-h-screen flex items-center">
-        <div class="container mx-auto px-6">
+        <div class="max-w-7xl mx-auto px-6">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <!-- Left Content -->
                 <div class="animate-slide-left">
-                    <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                    <h1 class="text-5xl md:text-6xl font-bold text-blue-800 mb-6 leading-tight">
                         Pantau Stresmu dengan
-                        <span class="text-yellow-300">PulseCare</span>
+                        <span class="text-blue-600">PulseCare</span>
                     </h1>
-                    <p class="text-xl text-white/90 mb-8 leading-relaxed">
+                    <p class="text-xl text-black mb-8 leading-relaxed">
                         Cek kondisi emosional kamu lewat kuisioner DASS-21 dan detak jantung. Dapatkan hasil cepat dan
                         saran relaksasi otomatis.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="{{ route('register') }}"
+                    @if (Auth::check())
+                        <a href="{{ route('dashboard') }}"
                             class="bg-blue-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-blue-600 hover:shadow-xl transform hover:-translate-y-2 transition-all text-center">
-                            Daftar Gratis
+                            Masuk Dashboard
                         </a>
-                        <a href="{{ route('login') }}"
-                            class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-blue-500 transition-all text-center">
-                            Masuk Akun
-                        </a>
-                    </div>
+                    @else
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="{{ route('register') }}"
+                                class="bg-blue-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-blue-600 hover:shadow-xl transform hover:-translate-y-2 transition-all text-center">
+                                Daftar Gratis
+                            </a>
+                            <a href="{{ route('login') }}"
+                                class="border-2 border-black text-black px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-blue-500 transition-all text-center">
+                                Masuk Akun
+                            </a>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Right Illustration -->
-                <div class="animate-slide-right relative">
-                    <div class="relative">
-                        <!-- Medical Professionals -->
-                        <div class="flex justify-center items-center space-x-8">
-                            <div class="animate-float">
-                                <div
-                                    class="w-32 h-40 bg-white rounded-2xl shadow-xl flex flex-col items-center justify-center">
-                                    <div
-                                        class="w-16 h-16 bg-blue-100 rounded-full mb-2 flex items-center justify-center">
-                                        <div class="w-8 h-8 bg-blue-500 rounded-full"></div>
-                                    </div>
-                                    <div class="w-20 h-20 bg-blue-500 rounded-t-full"></div>
-                                </div>
-                            </div>
-                            <div class="animate-float" style="animation-delay: 0.5s;">
-                                <div
-                                    class="w-32 h-40 bg-white rounded-2xl shadow-xl flex flex-col items-center justify-center">
-                                    <div
-                                        class="w-16 h-16 bg-pink-100 rounded-full mb-2 flex items-center justify-center">
-                                        <div class="w-8 h-8 bg-pink-500 rounded-full"></div>
-                                    </div>
-                                    <div class="w-20 h-20 bg-pink-500 rounded-t-full"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Heart Icon -->
-                        <div class="absolute -top-10 left-1/2 transform -translate-x-1/2">
-                            <div
-                                class="animate-pulse-heart bg-blue-500 rounded-full w-20 h-20 flex items-center justify-center shadow-2xl">
-                                <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                                </svg>
-                            </div>
-                        </div>
-
-                        <!-- Floating Elements -->
-                        <div class="absolute -left-8 top-8 animate-float" style="animation-delay: 1s;">
-                            <div class="w-12 h-12 bg-green-400 rounded-full opacity-80"></div>
-                        </div>
-                        <div class="absolute -right-8 bottom-8 animate-float" style="animation-delay: 1.5s;">
-                            <div class="w-16 h-16 bg-yellow-400 rounded-full opacity-80"></div>
-                        </div>
-                    </div>
+                <div class="animate-slide-right">
+                    <!-- Medical Professionals -->
+                    <img src="{{ asset('storage/undraw_medicine_hqqg.svg') }}" alt="">
                 </div>
             </div>
         </div>
@@ -79,7 +44,7 @@
 
     <!-- Features Section -->
     <section class="py-20 bg-white">
-        <div class="container mx-auto px-6">
+        <div class="max-w-7xl mx-auto px-6">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-16">
                 Fitur Utama PulseCare
             </h2>
@@ -141,7 +106,7 @@
 
     <!-- Statistics Section -->
     <section class="py-20 bg-gray-50">
-        <div class="container mx-auto px-6">
+        <div class="max-w-7xl mx-auto px-6">
             <div class="grid md:grid-cols-3 gap-8 text-center">
                 <div class="animate-on-scroll">
                     <div class="text-4xl font-bold text-blue-500 mb-2">{{ $totalUsers }}</div>
@@ -161,7 +126,7 @@
 
     <!-- How It Works Section -->
     <section class="py-20 bg-white">
-        <div class="container mx-auto px-6">
+        <div class="max-w-7xl mx-auto px-6">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-16">
                 Cara Kerja PulseCare
             </h2>
@@ -199,7 +164,7 @@
 
     <!-- CTA Section -->
     <section class="py-20 bg-gradient-to-r from-blue-500 to-purple-600">
-        <div class="container mx-auto px-6 text-center">
+        <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-4xl font-bold text-white mb-8">
                 Mulai Pantau Stresmu Sekarang
             </h2>
@@ -208,14 +173,21 @@
                 mereka.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ route('register') }}"
-                    class="bg-white text-blue-500 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all">
-                    Daftar Gratis Sekarang
-                </a>
-                <a href="#features"
-                    class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-blue-500 transition-all">
-                    Pelajari Lebih Lanjut
-                </a>
+                @if (Auth::check())
+                    <a href="{{ route('dashboard') }}"
+                        class="bg-white text-blue-500 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all">
+                        Masuk Dashboard
+                    </a>
+                @else
+                    <a href="{{ route('register') }}"
+                        class="bg-white text-blue-500 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 hover:shadow-xl transform hover:-translate-y-2 transition-all">
+                        Daftar Gratis Sekarang
+                    </a>
+                    <a href="#features"
+                        class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-blue-500 transition-all">
+                        Pelajari Lebih Lanjut
+                    </a>
+                @endif
             </div>
         </div>
     </section>
