@@ -7,7 +7,7 @@
                         <ul class="space-y-1 px-2">
                             <!-- Dashboard -->
                             <x-layouts.sidebar-link href="{{ route('dashboard') }}" icon='fas-house'
-                                :active="request()->routeIs('dashboard*')">Dashboard</x-layouts.sidebar-link>
+                                :active="request()->routeIs('dashboard')">Dashboard</x-layouts.sidebar-link>
 
                             <x-layouts.sidebar-two-level-link-parent title="Kuisioner" icon="fas-clipboard-list"
                                 :active="request()->routeIs(['kuisioner.index', 'history.index', 'kuisioner.create'])">
