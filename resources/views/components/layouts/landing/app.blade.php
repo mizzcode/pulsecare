@@ -90,38 +90,33 @@
                     class="text-3xl font-bold text-blue-500 hover:scale-105 transition-transform">
                     PulseCare
                 </a>
-                @if (Auth::check())
-                    <!-- Mobile Menu -->
-                    <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
-                        <div class="flex flex-col space-y-4">
-                            <a href="{{ route('dashboard') }}"
-                                class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 text-center transition-all">
-                                Masuk Dashboard
-                            </a>
-                        </div>
-                    </div>
-                @else
-                    <div class="hidden md:flex space-x-8 items-center">
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{{ route('home') }}"
+                        class="text-gray-700 hover:text-blue-500 font-medium transition-colors {{ request()->routeIs('home') ? 'text-blue-500' : '' }}">
+                        Beranda
+                    </a>
+                    <a href="{{ route('articles.index') }}"
+                        class="text-gray-700 hover:text-blue-500 font-medium transition-colors {{ request()->routeIs('articles.*') ? 'text-blue-500' : '' }}">
+                        Artikel
+                    </a>
+
+                    @if (Auth::check())
+                        <a href="{{ route('dashboard') }}"
+                            class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 hover:shadow-lg transform hover:-translate-y-1 transition-all">
+                            Dashboard
+                        </a>
+                    @else
                         <a href="{{ route('login') }}"
                             class="text-gray-700 hover:text-blue-500 font-medium transition-colors">Masuk</a>
                         <a href="{{ route('register') }}"
                             class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 hover:shadow-lg transform hover:-translate-y-1 transition-all">
                             Daftar
                         </a>
-                    </div>
+                    @endif
+                </div>
 
-                    <!-- Mobile Menu -->
-                    <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
-                        <div class="flex flex-col space-y-4">
-                            <a href="{{ route('login') }}"
-                                class="text-gray-700 hover:text-blue-500 font-medium transition-colors">Masuk</a>
-                            <a href="{{ route('register') }}"
-                                class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 text-center transition-all">
-                                Daftar
-                            </a>
-                        </div>
-                    </div>
-                @endif
                 <!-- Mobile Menu Button -->
                 <button id="mobile-menu-button" class="md:hidden text-gray-700 hover:text-blue-500">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,6 +124,34 @@
                             d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="{{ route('home') }}"
+                        class="text-gray-700 hover:text-blue-500 font-medium transition-colors {{ request()->routeIs('home') ? 'text-blue-500' : '' }}">
+                        Beranda
+                    </a>
+                    <a href="{{ route('articles.index') }}"
+                        class="text-gray-700 hover:text-blue-500 font-medium transition-colors {{ request()->routeIs('articles.*') ? 'text-blue-500' : '' }}">
+                        Artikel
+                    </a>
+
+                    @if (Auth::check())
+                        <a href="{{ route('dashboard') }}"
+                            class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 text-center transition-all">
+                            Dashboard
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}"
+                            class="text-gray-700 hover:text-blue-500 font-medium transition-colors">Masuk</a>
+                        <a href="{{ route('register') }}"
+                            class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 text-center transition-all">
+                            Daftar
+                        </a>
+                    @endif
+                </div>
             </div>
         </nav>
     </header>

@@ -7,18 +7,33 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
+// Public Article routes
+Route::get('/articles', [App\Http\Controllers\ArticleController::class, 'index'])->name('articles.index');
+Route::get('/articles/{article:slug}', [App\Http\Controllers\ArticleController::class, 'show'])->name('articles.show');
+
+Route::get('/storage/{filename}', function ($filename) {
+    $path = storage_path('app/public/' . $filename);
+    if (!file_exists($path) || !in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), ['jpg', 'png', 'pdf', 'svg'])) {
+        abort(404);
+    }
+    return response()->file($path);
+})->where('filename', '.*');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [Dashboard\HomeController::class, 'index'])->name('dashboard');
 
     Route::get('kuisioner', [Dashboard\AssesmentController::class, 'index'])->name('kuisioner.index');
     Route::get('kuisioner/create', [Dashboard\AssesmentController::class, 'create'])->name('kuisioner.create');
     Route::post('kuisioner', [Dashboard\AssesmentController::class, 'store'])->name('kuisioner.store');
-    
+
     Route::get('kuisioner/history', [Dashboard\HistoryController::class, 'index'])->name('history.index');
 
     Route::get('recommendation', [Dashboard\RecommendationController::class, 'index'])->name('recommendation.index');
-    
+
     Route::get('chat/dokter', [Dashboard\DokterController::class, 'index'])->name('dokter.index');
+
+    // Dashboard Article routes (admin only)
+    Route::resource('dashboard/articles', Dashboard\ArticleController::class, ['as' => 'dashboard']);
 
     Route::get('settings/profile', [Settings\ProfileController::class, 'edit'])->name('settings.profile.edit');
     Route::put('settings/profile', [Settings\ProfileController::class, 'update'])->name('settings.profile.update');
