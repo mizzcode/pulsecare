@@ -14,15 +14,22 @@
                                 <x-layouts.sidebar-two-level-link href="{{ route('kuisioner.create') }}" icon='fas-plus'
                                     :active="request()->routeIs(['kuisioner.create', 'kuisioner.index'])">Buat
                                     baru</x-layouts.sidebar-two-level-link>
-                                <x-layouts.sidebar-two-level-link href="{{ route('history.index') }}" icon='fas-clock-rotate-left'
+                                <x-layouts.sidebar-two-level-link href="{{ route('history.index') }}"
+                                    icon='fas-clock-rotate-left'
                                     :active="request()->routeIs('history.index')">Riwayat</x-layouts.sidebar-two-level-link>
                             </x-layouts.sidebar-two-level-link-parent>
 
                             <x-layouts.sidebar-two-level-link href="{{ route('recommendation.index') }}"
                                 icon='fas-lightbulb' :active="request()->routeIs('recommendation.index')">Recommendation</x-layouts.sidebar-two-level-link>
 
-                            <x-layouts.sidebar-two-level-link href="{{ route('dokter.index') }}"
-                                icon='fas-lightbulb' :active="request()->routeIs('dokter.index')">Chat Dokter</x-layouts.sidebar-two-level-link>
+                            <!-- Articles (Admin Only) -->
+                            @if (auth()->user()->role->name === 'admin')
+                                <x-layouts.sidebar-link href="{{ route('dashboard.articles.index') }}"
+                                    icon='fas-newspaper' :active="request()->routeIs('dashboard.articles.*')">Articles</x-layouts.sidebar-link>
+                            @endif
+
+                            <x-layouts.sidebar-two-level-link href="{{ route('dokter.index') }}" icon='fas-lightbulb'
+                                :active="request()->routeIs('dokter.index')">Chat Dokter</x-layouts.sidebar-two-level-link>
                         </ul>
                     </nav>
                 </div>
