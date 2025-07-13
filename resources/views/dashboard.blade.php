@@ -84,6 +84,136 @@
                 </div>
             </div>
         </div>
+
+        <!-- Active Chats Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                        @if (auth()->user()->isDoctor())
+                            {{ __('Active Patients') }}
+                        @else
+                            {{ __('Active Chats') }}
+                        @endif
+                    </p>
+                    <p class="text-2xl font-bold text-gray-800 dark:text-gray-100 mt-1">{{ $activeChats }}</p>
+                    @if ($unreadMessages > 0)
+                        <p class="text-xs text-orange-500 mt-1 flex items-center">
+                            <span class="w-2 h-2 bg-orange-500 rounded-full mr-1 animate-pulse"></span>
+                            {{ $unreadMessages }} {{ __('unread messages') }}
+                        </p>
+                    @else
+                        <p class="text-xs text-gray-500 mt-1">{{ __('No unread messages') }}</p>
+                    @endif
+                </div>
+                <div class="bg-purple-100 dark:bg-purple-900 p-3 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-500 dark:text-purple-300"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Chat Quick Access Section -->
+    @if ($activeChats > 0 || $unreadMessages > 0)
+        <div
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700 mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                    @if (auth()->user()->isDoctor())
+                        {{ __('Recent Patient Messages') }}
+                    @else
+                        {{ __('Chat Summary') }}
+                    @endif
+                </h2>
+                @if (auth()->user()->isDoctor())
+                    <a href="{{ route('chat.index') }}"
+                        class="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 text-sm font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                            </path>
+                        </svg>
+                        {{ __('View All Chats') }}
+                    </a>
+                @else
+                    <a href="{{ route('chat.doctors') }}"
+                        class="text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 text-sm font-medium flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        {{ __('Start New Chat') }}
+                    </a>
+                @endif
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div class="flex-shrink-0">
+                        <div
+                            class="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 text-purple-600 dark:text-purple-300" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h8z">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $activeChats }}</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            @if (auth()->user()->isDoctor())
+                                Active patient conversations
+                            @else
+                                Active conversations
+                            @endif
+                        </p>
+                    </div>
+                </div>
+
+                @if ($unreadMessages > 0)
+                    <div class="flex items-center p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                        <div class="flex-shrink-0">
+                            <div
+                                class="w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-orange-600 dark:text-orange-300" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z">
+                                    </path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $unreadMessages }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Unread messages</p>
+                        </div>
+                    </div>
+                @else
+                    <div class="flex items-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        <div class="flex-shrink-0">
+                            <div
+                                class="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-green-600 dark:text-green-300" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">All caught up!</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">No unread messages</p>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endif
 
 </x-layouts.app>

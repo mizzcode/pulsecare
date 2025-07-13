@@ -10,8 +10,14 @@ class DokterController extends Controller
 {
     public function index(Request $request)
     {
-        $doctors = User::where('role_id', 2)->get();
+        $user = auth()->user();
 
-        return view('dokter.index', compact('doctors'));
+        // Jika user adalah dokter, redirect ke chat index
+        if ($user->isDoctor()) {
+            return redirect()->route('chat.index');
+        }
+
+        // Redirect ke halaman chat doctors yang lebih modern
+        return redirect()->route('chat.doctors');
     }
 }

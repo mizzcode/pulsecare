@@ -73,4 +73,46 @@ class User extends Authenticatable
     {
         return $this->hasMany(Article::class, 'author_id');
     }
+
+    // Chat relationships
+    public function patientChats()
+    {
+        return $this->hasMany(Chat::class, 'patient_id');
+    }
+
+    public function doctorChats()
+    {
+        return $this->hasMany(Chat::class, 'doctor_id');
+    }
+
+    public function sentMessages()
+    {
+        return $this->hasMany(ChatMessage::class, 'sender_id');
+    }
+
+    // Scope for doctors
+    public function scopeDoctors($query)
+    {
+        return $query->where('role_id', 2);
+    }
+
+    // Check if user is doctor
+    public function isDoctor()
+    {
+        return $this->role_id == 2;
+    }
+
+    // Check if user is patient
+    public function isPatient()
+    {
+        return $this->role_id == 3;
+    }
+
+    /**
+     * Get role name
+     */
+    public function getRoleNameAttribute()
+    {
+        return $this->role ? $this->role->name : 'Unknown';
+    }
 }
