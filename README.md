@@ -8,29 +8,28 @@
 
 Aplikasi ini memiliki tiga peran pengguna utama dengan fitur yang disesuaikan untuk masing-masing peran.
 
-### 1. Untuk User
+### 1. Untuk User Pasien
 
 * **Asesmen Kesehatan Mental**: Mengisi kuesioner DASS-21 untuk mengetahui tingkat depresi, kecemasan, dan stres.
 * **Riwayat & Tren**: Melihat riwayat hasil asesmen dalam bentuk tabel dan grafik tren untuk memantau perkembangan kondisi.
 * **Rekomendasi Personal**: Mendapatkan rekomendasi tindakan berdasarkan level kondisi kesehatan mental terakhir.
-* **Forum Publik**: *(Fitur Mendatang)* Ajukan pertanyaan dan lihat jawaban dari perawat.
+* **Chat Dokter**: Ajukan pertanyaan dan lihat jawaban dari dokter.
 * **Pelacakan Kesehatan**: *(Fitur Mendatang)* Mencatat siklus menstruasi, data kehamilan, dan tumbuh kembang anak.
-* **Artikel Edukasi**: *(Fitur Mendatang)* Mengakses konten edukasi seputar pranikah, kehamilan, dan parenting.
+* **Artikel Edukasi**: Mengakses konten edukasi seputar pranikah, kehamilan, parenting dan lain sebagainya.
 * **Jurnal Pribadi**: *(Fitur Mendatang)* Menulis jurnal harian untuk refleksi diri.
 * **Reminder**: *(Fitur Mendatang)* Dapatkan notifikasi untuk imunisasi dan siklus kesehatan.
 
-### 2. Untuk Tenaga Kesehatan (Perawat)
+### 2. Untuk Tenaga Kesehatan (Dokter)
 
-* **Dasbor Pertanyaan**: *(Fitur Mendatang)* Melihat daftar semua pertanyaan yang masuk dari pasien di forum.
-* **Sistem Ambil & Jawab**: *(Fitur Mendatang)* Mengambil (assign) pertanyaan untuk dijawab, mencegah jawaban ganda dari perawat lain.
+* **Dasbor Pertanyaan**: Melihat daftar semua pertanyaan yang masuk dari pasien di forum.
 * **Data Anak**: *(Fitur Mendatang)* Kelola data tumbuh kembang dan riwayat imunisasi.
 
 
 ### 3. Untuk Admin
 
 * **Manajemen Pengguna**: *(Fitur Mendatang)* CRUD untuk semua data pengguna.
-* **Manajemen Konten**: *(Fitur Mendatang)* Mengelola semua artikel.
-* **Moderasi Forum**: *(Fitur Mendatang)* Manajemen data forum dan laporan aplikasi.
+* **Manajemen Konten**: Mengelola semua artikel.
+* **Laporan**: *(Fitur Mendatang)* laporan aplikasi.
 
 ---
 
@@ -90,8 +89,8 @@ Berikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal.
 8.  **Akses Aplikasi**
     Buka browser Anda dan kunjungi `http://127.0.0.1:8000`. Anda bisa login dengan akun default yang dibuat oleh seeder:
     - **Admin**: `mizz@gmail.com` / `password`
-    - **Perawat**: `jani@gmail.com` / `password`
-    - **User**: `zul@gmail.com` / `password`
+    - **Dokter**: `jen@gmail.com` / `password`
+    - **User Pasien**: `patient@gmail.com` / `password`
 
 ---
 
