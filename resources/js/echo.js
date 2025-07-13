@@ -65,18 +65,35 @@ window.Pusher = Pusher;
 // Configure Pusher to be quiet
 Pusher.logToConsole = false;
 
-// Enhanced Pusher configuration for shared hosting
-window.Echo = new Echo({
-    broadcaster: 'reverb',
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
-    wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
-    enabledTransports: ['ws', 'wss'],
-    // Reduce retry attempts and intervals for shared hosting
-    cluster: 'mt1',
-    encrypted: true,
-    disableStats: true,
-    enableLogging: false
-});
+// Check if WebSocket configuration is available
+const hasWebSocketConfig = import.meta.env.VITE_REVERB_APP_KEY &&
+    import.meta.env.VITE_REVERB_HOST &&
+    import.meta.env.VITE_REVERB_PORT;
+
+// Only initialize Echo if WebSocket configuration is available
+if (hasWebSocketConfig && import.meta.env.VITE_REVERB_APP_KEY !== 'null') {
+    try {
+        // Enhanced Pusher configuration for WebSocket
+        window.Echo = new Echo({
+            broadcaster: 'reverb',
+            key: import.meta.env.VITE_REVERB_APP_KEY,
+            wsHost: import.meta.env.VITE_REVERB_HOST,
+            wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
+            wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
+            forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
+            enabledTransports: ['ws', 'wss'],
+            cluster: 'mt1',
+            encrypted: true,
+            disableStats: true,
+            enableLogging: false
+        });
+
+        console.log('✅ WebSocket Echo initialized');
+    } catch (error) {
+        console.log('❌ WebSocket Echo failed to initialize:', error.message);
+        window.Echo = null;
+    }
+} else {
+    console.log('📡 WebSocket configuration not available - operating without real-time');
+    window.Echo = null;
+}
