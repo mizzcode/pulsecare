@@ -32,6 +32,17 @@ class Chat extends Model
         return $this->belongsTo(User::class, 'doctor_id');
     }
 
+    /**
+     * Get the user who closed this chat
+     */
+    public function closedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by');
+    }
+
+    /**
+     * Get chat messages
+     */
     public function messages(): HasMany
     {
         return $this->hasMany(ChatMessage::class)->orderBy('created_at');
@@ -86,5 +97,26 @@ class Chat extends Model
     public function getClosedDateAttribute()
     {
         return $this->closed_at ? $this->closed_at->format('d M Y H:i') : null;
+    }
+
+    /**
+     * Check if user is participant in this chat
+     */
+    public function isUserParticipant($userId)
+    {
+        return $this->patient_id == $userId || $this->doctor_id == $userId;
+    }
+
+    /**
+     * Get unread messages count for user
+     */
+    public function getUnreadMessagesCount($userId)
+    {
+        // Simple implementation - count messages after user's last seen
+        // You can enhance this with a proper read_receipts table
+        return $this->messages()
+            ->where('user_id', '!=', $userId)
+            ->where('created_at', '>', $this->updated_at)
+            ->count();
     }
 }

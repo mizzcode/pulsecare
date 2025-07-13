@@ -23,7 +23,8 @@ return new class extends Migration
             $table->foreign('doctor_id')->references('id')->on('users')->onDelete('cascade');
 
             // Satu user hanya bisa punya satu chat aktif dengan dokter tertentu
-            $table->unique(['patient_id', 'doctor_id', 'status']);
+            // Tapi bisa punya banyak chat yang sudah ditutup (closed)
+            $table->index(['patient_id', 'doctor_id', 'status']);
         });
     }
 

@@ -48,11 +48,11 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
         User::create([
-            'name' => 'misbah',
-            'email' => 'misbah@gmail.com',
+            'name' => 'John Doe',
+            'email' => 'patient@gmail.com',
             'password' => 'password',
             'role_id' => 3,
-            'phone' => '6281286558895',
+            'phone' => '6281234567890',
             'email_verified_at' => now(),
         ]);
     }

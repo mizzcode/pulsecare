@@ -6,6 +6,7 @@ use App\Models\Chat;
 use App\Models\ChatMessage;
 use App\Models\User;
 use App\Events\MessageSent;
+use App\Events\ChatClosed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -147,7 +148,7 @@ class ChatController extends Controller
                     'message' => $message->message,
                     'sender_name' => $user->name,
                     'sender_id' => $user->id,
-                    'created_at' => $message->created_at->format('H:i'),
+                    'created_at' => $message->created_at->toISOString(),
                     'is_own' => true
                 ]
             ]);
@@ -236,6 +237,12 @@ class ChatController extends Controller
 
         // Update status chat menjadi closed
         $chat->close($user->id);
+
+        // Load relasi closedBy dengan role untuk broadcast
+        $chat->load('closedBy.role');
+
+        // Broadcast chat closed event untuk memberitahu semua user di chat
+        broadcast(new ChatClosed($chat))->toOthers();
 
         return redirect()->route('chat.index')->with('success', 'Chat telah ditutup dan dipindahkan ke riwayat.');
     }

@@ -12,7 +12,7 @@ class DoctorSeeder extends Seeder
     public function run(): void
     {
         // Data sesuai dengan UserSeeder yang sudah ada
-        // Role ID 1 = Admin, Role ID 2 = Doctor, Role ID 3 = User/Patient
+        // Role ID 1 = Admin, Role ID 2 = Dokter, Role ID 3 = Pasien
 
         // Doctors from UserSeeder (role_id = 2)
         $doctors = [
@@ -64,13 +64,13 @@ class DoctorSeeder extends Seeder
             ]
         );
 
-        // User/Patient from UserSeeder (role_id = 3)
+        // Patient user example
         User::updateOrCreate(
             ['email' => 'misbah@gmail.com'],
             [
                 'name' => 'misbah',
                 'password' => Hash::make('password'),
-                'role_id' => 3,
+                'role_id' => 3, // Patient role
                 'phone' => '6281286558895',
                 'email_verified_at' => now(),
             ]

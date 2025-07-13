@@ -16,22 +16,13 @@ class DoctorUserSeeder extends Seeder
     public function run(): void
     {
         // Get doctor role
-        $doctorRole = Role::where('name', 'doctor')->first();
-        $patientRole = Role::where('name', 'patient')->first();
+        $doctorRole = Role::where('name', 'dokter')->first();
 
         if (!$doctorRole) {
             // Create doctor role if doesn't exist
             $doctorRole = Role::create([
-                'name' => 'doctor',
-                'description' => 'Doctor role'
-            ]);
-        }
-
-        if (!$patientRole) {
-            // Create patient role if doesn't exist
-            $patientRole = Role::create([
-                'name' => 'patient',
-                'description' => 'Patient role'
+                'name' => 'dokter',
+                'description' => 'Dokter role'
             ]);
         }
 
@@ -73,20 +64,6 @@ class DoctorUserSeeder extends Seeder
             );
         }
 
-        // Create test patient user
-        User::updateOrCreate(
-            ['email' => 'patient@pulsecare.com'],
-            [
-                'name' => 'John Doe',
-                'email' => 'patient@pulsecare.com',
-                'phone' => '081234567899',
-                'gender' => 'male',
-                'password' => Hash::make('password'),
-                'role_id' => $patientRole->id,
-                'email_verified_at' => now(),
-            ]
-        );
-
-        $this->command->info('Doctor and patient users created successfully!');
+        $this->command->info('Doctor users created successfully!');
     }
 }

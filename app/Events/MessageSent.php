@@ -36,7 +36,7 @@ class MessageSent implements ShouldBroadcast
       'message' => $this->chatMessage->message,
       'sender_id' => $this->chatMessage->sender_id,
       'sender_name' => $this->chatMessage->sender->name,
-      'created_at' => $this->chatMessage->created_at->format('H:i'),
+      'created_at' => $this->chatMessage->created_at->toISOString(),
       'chat_id' => $this->chatMessage->chat_id,
     ];
   }

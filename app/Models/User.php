@@ -99,13 +99,13 @@ class User extends Authenticatable
     // Check if user is doctor
     public function isDoctor()
     {
-        return $this->role_id == 2;
+        return $this->role && $this->role->name === 'dokter';
     }
 
     // Check if user is patient
     public function isPatient()
     {
-        return $this->role_id == 3;
+        return $this->role && $this->role->name === 'pasien';
     }
 
     /**
@@ -113,6 +113,9 @@ class User extends Authenticatable
      */
     public function getRoleNameAttribute()
     {
-        return $this->role ? $this->role->name : 'Unknown';
+        if ($this->role) {
+            return $this->role->name;
+        }
+        return 'Unknown';
     }
 }

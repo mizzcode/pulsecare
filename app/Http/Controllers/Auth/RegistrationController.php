@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +33,9 @@ class RegistrationController extends Controller
 
         $validated['password'] = Hash::make($validated['password']);
 
-        $validated['role_id'] = 3;
+        // Assign patient role by default
+        $patientRole = Role::where('name', 'pasien')->first();
+        $validated['role_id'] = $patientRole ? $patientRole->id : null;
 
         event(new Registered(($user = User::create($validated))));
 
