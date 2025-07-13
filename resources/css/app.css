@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -7,9 +7,9 @@
 
 @theme {
     --font-sans:
-        "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-        "Noto Color Emoji";
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
     --sidebar-background: hsl(var(--sidebar-background));
     --sidebar-foreground: hsl(var(--sidebar-foreground));
     --sidebar-accent: hsl(var(--sidebar-accent));
@@ -24,7 +24,7 @@
     .bg-sidebar {
         background-color: hsl(var(--sidebar-background));
     }
-    
+
     .bg-sidebar-accent {
         background-color: hsl(var(--sidebar-accent));
     }
@@ -97,7 +97,7 @@
 }
 
 .custom-file-input::before {
-    content: "Select files";
+    content: 'Select files';
     display: inline-block;
     background: #f9fafb;
     border: 1px solid #d1d5db;
@@ -127,4 +127,41 @@
 
 .dark .custom-file-input:active::before {
     background: #4b5563;
+}
+
+/* Mobile-specific fixes for sidebar menu */
+@media (max-width: 1024px) {
+    /* Ensure blue-400 background stays blue on mobile touch/click */
+    .bg-blue-400,
+    button.bg-blue-400,
+    a.bg-blue-400 {
+        background-color: #60a5fa !important;
+        color: white !important;
+    }
+
+    /* Prevent mobile browsers from applying default touch/click gray overlay */
+    button:active,
+    a:active,
+    .bg-blue-400:active,
+    .hover\:bg-blue-400:active,
+    button[class*='bg-blue-400']:active,
+    a[class*='bg-blue-400']:active {
+        background-color: #60a5fa !important;
+        color: white !important;
+        -webkit-tap-highlight-color: transparent !important;
+    }
+
+    /* Specific fix for kuisioner parent button */
+    button[class*='bg-blue-400']:focus,
+    button[class*='bg-blue-400']:active:focus {
+        background-color: #60a5fa !important;
+        color: white !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+}
+
+/* Remove webkit tap highlight globally */
+* {
+    -webkit-tap-highlight-color: transparent;
 }

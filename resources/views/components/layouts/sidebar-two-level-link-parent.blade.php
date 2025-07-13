@@ -1,18 +1,20 @@
 @props(['active' => false, 'title' => '', 'icon' => 'fas-list'])
 
 <li x-data="{ open: {{ $active ? 'true' : 'false' }} }">
-    <button @click="
+    <button
+        @click="
         if (sidebarOpen) {
             open = !open;
         } else {
             temporarilyOpenSidebar();
             open = true;
         }
-    " @class([
-        'flex items-center justify-between w-full px-3 py-2 text-sm rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-        'bg-blue-400 text-sidebar-accent-foreground font-medium dark:text-white' => $active,
-        'hover:bg-blue-400 hover:cursor-pointer hover:font-bold hover:text-sidebar-accent-foreground text-sidebar-foreground dark:text-white' => !$active,
-    ])>
+    "
+        @class([
+            'flex items-center justify-between w-full px-3 py-2 text-sm rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+            'bg-blue-400 text-white font-bold' => $active,
+            'hover:bg-blue-400 hover:cursor-pointer hover:font-bold hover:text-white text-sidebar-foreground dark:text-white font-semibold' => !$active,
+        ])>
         <div class="flex items-center">
             @svg($icon, $active ? 'w-5 h-5 text-white-500' : 'w-5 h-5 text-white-500')
             <span :class="{ 'opacity-0 hidden ml-0': !sidebarOpen, 'ml-3': sidebarOpen }"

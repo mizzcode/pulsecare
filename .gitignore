@@ -21,3 +21,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Deployment files
+pulsecare.zip
+.env.production
