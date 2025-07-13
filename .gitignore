@@ -23,12 +23,5 @@ yarn-error.log
 /.zed
 
 # Deployment files
-/deployment
-pulsecare-deployment*.zip
-setup.php
+pulsecare.zip
 .env.production
-prepare-deployment.sh
-optimize-production.sh
-DEPLOYMENT_GUIDE.md
-DEPLOYMENT_CHECKLIST.md
-setup_completed.txt
