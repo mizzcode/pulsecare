@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Log;
 
 class ChatController extends Controller
 {
+    /**
+     * Check if user is participant in chat
+     */
+    private function isUserParticipant(Chat $chat, $userId): bool
+    {
+        return $chat->patient_id == $userId || $chat->doctor_id == $userId;
+    }
+
     // Halaman pilih dokter (untuk pasien) atau dashboard chat (untuk dokter)
     public function doctors()
     {
@@ -64,8 +72,27 @@ class ChatController extends Controller
     {
         $user = Auth::user();
 
+        Log::info('Chat room access attempt', [
+            'user_id' => $user->id,
+            'user_id_type' => gettype($user->id),
+            'chat_patient_id' => $chat->patient_id,
+            'chat_patient_id_type' => gettype($chat->patient_id),
+            'chat_doctor_id' => $chat->doctor_id,
+            'chat_doctor_id_type' => gettype($chat->doctor_id),
+            'is_patient' => $chat->patient_id == $user->id,
+            'is_doctor' => $chat->doctor_id == $user->id,
+            'user_role' => $user->role->name ?? 'unknown'
+        ]);
+
         // Pastikan user adalah bagian dari chat ini
-        if ($chat->patient_id !== $user->id && $chat->doctor_id !== $user->id) {
+        if (!$this->isUserParticipant($chat, $user->id)) {
+            Log::warning('Unauthorized chat access', [
+                'user_id' => $user->id,
+                'chat_id' => $chat->id,
+                'patient_id' => $chat->patient_id,
+                'doctor_id' => $chat->doctor_id,
+                'user_role' => $user->role->name ?? 'unknown'
+            ]);
             abort(403, 'Unauthorized access to this chat');
         }
 
@@ -81,8 +108,7 @@ class ChatController extends Controller
                 'read_at' => now()
             ]);
 
-        // Tentukan lawan bicara
-        $otherUser = $chat->patient_id === $user->id ? $chat->doctor : $chat->patient;
+        $otherUser = $chat->patient_id == $user->id ? $chat->doctor : $chat->patient;
 
         return view('chat.chat-room', compact('chat', 'messages', 'otherUser'));
     }
@@ -93,7 +119,7 @@ class ChatController extends Controller
         $user = Auth::user();
 
         // Pastikan user adalah bagian dari chat ini
-        if ($chat->patient_id !== $user->id && $chat->doctor_id !== $user->id) {
+        if (!$this->isUserParticipant($chat, $user->id)) {
             abort(403, 'Unauthorized access to this chat');
         }
 
@@ -210,7 +236,7 @@ class ChatController extends Controller
     {
         $user = Auth::user();
 
-        if ($chat->patient_id !== $user->id && $chat->doctor_id !== $user->id) {
+        if (!$this->isUserParticipant($chat, $user->id)) {
             abort(403);
         }
 
@@ -231,7 +257,7 @@ class ChatController extends Controller
         $user = Auth::user();
 
         // Pastikan user adalah bagian dari chat ini
-        if ($chat->patient_id !== $user->id && $chat->doctor_id !== $user->id) {
+        if (!$this->isUserParticipant($chat, $user->id)) {
             abort(403, 'Unauthorized access to this chat');
         }
 
