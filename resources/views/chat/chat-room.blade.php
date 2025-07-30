@@ -154,6 +154,16 @@
                 const chatId = {{ $chat->id }};
                 const currentUserRole = '{{ auth()->user()->role->name }}';
                 const otherUserRole = '{{ $otherUser->role->name }}';
+                
+                // Debug info for role-specific debugging
+                console.log('🔍 Chat Debug Info:', {
+                    currentUserId: currentUserId,
+                    chatId: chatId,
+                    currentUserRole: currentUserRole,
+                    otherUserRole: otherUserRole,
+                    isDoctor: currentUserRole === 'dokter',
+                    isPatient: currentUserRole === 'pasien'
+                });
 
                 // Determine who closed based on role
                 function getCloserRoleName() {
@@ -422,65 +432,151 @@
                     let connectionType = 'none';
                     let websocketConnected = false;
 
-                    // Try WebSocket
-                    if (window.Echo) {
-                        let websocketTimeout = null;
-
-                        // Set a timeout to check if WebSocket actually connects
-                        websocketTimeout = setTimeout(() => {
-                            if (!websocketConnected) {
-                                console.log('❌ WebSocket timeout - operating without real-time');
-                                connectionType = 'none';
-                            }
-                        }, 3000); // 3 second timeout
-
-                        try {
-                            // Listen for connection events
-                            window.Echo.connector.pusher.connection.bind('connected', () => {
-                                websocketConnected = true;
-                                connectionType = 'websocket';
-                                if (websocketTimeout) clearTimeout(websocketTimeout);
-                                console.log('✅ WebSocket connection established');
-                            });
-
-                            window.Echo.connector.pusher.connection.bind('disconnected', () => {
-                                if (websocketConnected) {
-                                    console.log('❌ WebSocket disconnected - operating without real-time');
-                                    websocketConnected = false;
-                                    connectionType = 'none';
+                    // Function to initialize WebSocket connection with retry mechanism
+                    let websocketRetryAttempts = 0;
+                    const maxWebSocketRetries = 3;
+                    
+                    function initializeWebSocket() {
+                        // Try WebSocket
+                        if (window.Echo) {
+                            console.log('🔍 Echo detected, setting up WebSocket connection...');
+                            console.log('🩺 Role-specific debug - Current role:', currentUserRole);
+                            
+                            // Detect if running in private/incognito mode
+                            const isPrivateMode = (() => {
+                                try {
+                                    // Try to access sessionStorage (fails in some private modes)
+                                    sessionStorage.setItem('test', '1');
+                                    sessionStorage.removeItem('test');
+                                    return false;
+                                } catch (e) {
+                                    return true;
                                 }
-                            });
+                            })();
+                            
+                            // Extended timeout for private mode with retry logic
+                            const baseTimeout = isPrivateMode ? 10000 : 5000; // 10s for private, 5s for normal
+                            // Add extra timeout for dokter role for debugging
+                            const roleTimeout = currentUserRole === 'dokter' ? 5000 : 0;
+                            const timeoutDuration = baseTimeout + (websocketRetryAttempts * 3000) + roleTimeout; // Add role-specific timeout
+                            console.log(`🔍 Mode: ${isPrivateMode ? 'Private' : 'Normal'} | Role: ${currentUserRole} | Attempt: ${websocketRetryAttempts + 1}/${maxWebSocketRetries + 1} | Timeout: ${timeoutDuration}ms`);
+                            
+                            let websocketTimeout = null;
 
-                            window.Echo.connector.pusher.connection.bind('failed', () => {
-                                console.log('❌ WebSocket failed - operating without real-time');
-                                websocketConnected = false;
-                                connectionType = 'none';
-                                if (websocketTimeout) clearTimeout(websocketTimeout);
-                            });
-
-                            // Set up chat listeners
-                            window.Echo.private(`chat.${chatId}`)
-                                .listen('.message.sent', (e) => {
-                                    if (connectionType === 'websocket' && e.sender_id !== currentUserId) {
-                                        addMessageToChat(e.message, false, e.created_at, e.sender_name || 'User', e.id);
+                            // Set a timeout to check if WebSocket actually connects
+                            websocketTimeout = setTimeout(() => {
+                                if (!websocketConnected) {
+                                    if (websocketRetryAttempts < maxWebSocketRetries) {
+                                        websocketRetryAttempts++;
+                                        console.log(`🔄 WebSocket timeout - retrying (${websocketRetryAttempts}/${maxWebSocketRetries})...`);
+                                        setTimeout(() => initializeWebSocket(), 1000); // Retry after 1s
+                                    } else {
+                                        console.log(`❌ WebSocket failed after ${maxWebSocketRetries + 1} attempts - operating without real-time`);
+                                        connectionType = 'none';
                                     }
-                                })
-                                .listen('.chat.closed', (e) => {
-                                    if (connectionType === 'websocket') {
-                                        console.log('Chat closed event received:', e);
-                                        handleChatClosed(e);
+                                } else {
+                                    console.log('✅ WebSocket timeout cleared - connection is working');
+                                }
+                            }, timeoutDuration);
+
+                            try {
+                                // Listen for connection events
+                                window.Echo.connector.pusher.connection.bind('connected', () => {
+                                    websocketConnected = true;
+                                    connectionType = 'websocket';
+                                    websocketRetryAttempts = 0; // Reset retry attempts on successful connection
+                                    if (websocketTimeout) clearTimeout(websocketTimeout);
+                                    console.log('✅ WebSocket connection established via connected event');
+                                });
+
+                                window.Echo.connector.pusher.connection.bind('disconnected', () => {
+                                    if (websocketConnected) {
+                                        console.log('❌ WebSocket disconnected - operating without real-time');
+                                        websocketConnected = false;
+                                        connectionType = 'none';
                                     }
                                 });
 
-                        } catch (error) {
-                            console.log('❌ WebSocket setup failed - operating without real-time');
-                            if (websocketTimeout) clearTimeout(websocketTimeout);
+                                window.Echo.connector.pusher.connection.bind('failed', () => {
+                                    console.log('❌ WebSocket failed - operating without real-time');
+                                    websocketConnected = false;
+                                    connectionType = 'none';
+                                    if (websocketTimeout) clearTimeout(websocketTimeout);
+                                });
+
+                                // Set up chat listeners with role-specific debugging
+                                console.log(`🔐 Setting up private channel for chat.${chatId} as ${currentUserRole}`);
+                                
+                                window.Echo.private(`chat.${chatId}`)
+                                    .listen('.message.sent', (e) => {
+                                        console.log(`📨 Message received by ${currentUserRole}:`, e);
+                                        
+                                        // If we can receive messages, WebSocket is working - mark as connected
+                                        if (!websocketConnected) {
+                                            websocketConnected = true;
+                                            connectionType = 'websocket';
+                                            websocketRetryAttempts = 0;
+                                            if (websocketTimeout) clearTimeout(websocketTimeout);
+                                            console.log('✅ WebSocket connection established via message reception');
+                                        }
+                                        
+                                        if (connectionType === 'websocket' && e.sender_id !== currentUserId) {
+                                            addMessageToChat(e.message, false, e.created_at, e.sender_name || 'User', e.id);
+                                        }
+                                    })
+                                    .listen('.chat.closed', (e) => {
+                                        console.log(`🔒 Chat closed event received by ${currentUserRole}:`, e);
+                                        
+                                        // If we can receive events, WebSocket is working - mark as connected
+                                        if (!websocketConnected) {
+                                            websocketConnected = true;
+                                            connectionType = 'websocket';
+                                            websocketRetryAttempts = 0;
+                                            if (websocketTimeout) clearTimeout(websocketTimeout);
+                                            console.log('✅ WebSocket connection established via event reception');
+                                        }
+                                        
+                                        if (connectionType === 'websocket') {
+                                            console.log('Chat closed event received:', e);
+                                            handleChatClosed(e);
+                                        }
+                                    })
+                                    .error((error) => {
+                                        console.log(`❌ Channel error for ${currentUserRole}:`, error);
+                                    });
+
+                            } catch (error) {
+                                console.log('❌ WebSocket setup failed - operating without real-time');
+                                if (websocketTimeout) clearTimeout(websocketTimeout);
+                                connectionType = 'none';
+                            }
+                        } else {
+                            console.log('📡 WebSocket not available - operating without real-time');
                             connectionType = 'none';
                         }
-                    } else {
-                        console.log('📡 WebSocket not available - operating without real-time');
-                        connectionType = 'none';
                     }
+
+                    // Wait for Echo to be available with multiple checks
+                    let echoCheckAttempts = 0;
+                    const maxEchoCheckAttempts = 10;
+                    
+                    function checkForEcho() {
+                        echoCheckAttempts++;
+                        
+                        if (window.Echo) {
+                            console.log('✅ Echo found, initializing WebSocket...');
+                            initializeWebSocket();
+                        } else if (echoCheckAttempts < maxEchoCheckAttempts) {
+                            console.log(`🔍 Waiting for Echo... (attempt ${echoCheckAttempts}/${maxEchoCheckAttempts})`);
+                            setTimeout(checkForEcho, 100); // Check every 100ms
+                        } else {
+                            console.log('❌ Echo not available after maximum attempts - operating without real-time');
+                            connectionType = 'none';
+                        }
+                    }
+
+                    // Start checking for Echo
+                    checkForEcho();
 
                     // Cleanup on page unload
                     window.addEventListener('beforeunload', () => {
