@@ -19,15 +19,15 @@ class ArticleController extends Controller
 
         // Search functionality
         if ($request->has('search') && $request->search) {
-            $query->where(function($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', '%' . $request->search . '%')
-                  ->orWhere('content', 'like', '%' . $request->search . '%')
-                  ->orWhere('excerpt', 'like', '%' . $request->search . '%');
+                    ->orWhere('content', 'like', '%' . $request->search . '%')
+                    ->orWhere('excerpt', 'like', '%' . $request->search . '%');
             });
         }
 
         $articles = $query->paginate(12);
-        
+
         // Get available categories that have published articles
         $categories = Category::active()
             ->whereHas('articles', function ($query) {
@@ -42,11 +42,16 @@ class ArticleController extends Controller
     public function show(Article $article)
     {
         // Only show published articles
-        if ($article->status !== 'published' || 
-            !$article->published_at || 
-            $article->published_at > now()) {
+        if (
+            $article->status !== 'published' ||
+            !$article->published_at ||
+            $article->published_at > now()
+        ) {
             abort(404);
         }
+
+        // Increment views count
+        $article->increment('views');
 
         // Load relationships
         $article->load(['author', 'category']);

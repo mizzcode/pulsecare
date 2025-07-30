@@ -16,7 +16,8 @@ class Article extends Model
         'excerpt',
         'author_id',
         'status',
-        'published_at'
+        'published_at',
+        'views'
     ];
 
     protected $casts = [

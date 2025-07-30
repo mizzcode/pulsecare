@@ -49,6 +49,15 @@ Route::middleware(['auth'])->group(function () {
     // User Management routes (admin only)
     Route::resource('dashboard/users', Dashboard\UserController::class, ['as' => 'dashboard']);
 
+    // Reports routes (admin only)
+    Route::prefix('dashboard/reports')->name('dashboard.reports.')->middleware('role:admin')->group(function () {
+        Route::get('/', [Dashboard\ReportController::class, 'index'])->name('index');
+        Route::get('/users', [Dashboard\ReportController::class, 'users'])->name('users');
+        Route::get('/assessments', [Dashboard\ReportController::class, 'assessments'])->name('assessments');
+        Route::get('/chats', [Dashboard\ReportController::class, 'chats'])->name('chats');
+        Route::get('/export', [Dashboard\ReportController::class, 'export'])->name('export');
+    });
+
     Route::get('settings/profile', [Settings\ProfileController::class, 'edit'])->name('settings.profile.edit');
     Route::put('settings/profile', [Settings\ProfileController::class, 'update'])->name('settings.profile.update');
     Route::delete('settings/profile', [Settings\ProfileController::class, 'destroy'])->name('settings.profile.destroy');

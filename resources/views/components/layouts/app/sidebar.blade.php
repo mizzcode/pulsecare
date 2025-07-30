@@ -6,8 +6,28 @@
                     <nav class="flex-1 overflow-y-auto custom-scrollbar py-4">
                         <ul class="space-y-1 px-2">
                             <!-- Dashboard -->
-                            <x-layouts.sidebar-link href="{{ route('dashboard') }}" icon='fas-house'
-                                :active="request()->routeIs('dashboard')">Dashboard</x-layouts.sidebar-link>
+                            @if (auth()->user()->role->name === 'admin')
+                                <x-layouts.sidebar-two-level-link-parent title="Dashboard" icon="fas-house"
+                                    :active="request()->routeIs(['dashboard', 'dashboard.reports.*'])">
+                                    <x-layouts.sidebar-two-level-link href="{{ route('dashboard') }}" icon='fas-chart-pie'
+                                        :active="request()->routeIs('dashboard')">Overview</x-layouts.sidebar-two-level-link>
+                                    <x-layouts.sidebar-two-level-link href="{{ route('dashboard.reports.index') }}"
+                                        icon='fas-chart-line'
+                                        :active="request()->routeIs('dashboard.reports.index')">Analytics</x-layouts.sidebar-two-level-link>
+                                    <x-layouts.sidebar-two-level-link href="{{ route('dashboard.reports.users') }}"
+                                        icon='fas-users' :active="request()->routeIs('dashboard.reports.users')">Laporan
+                                        Users</x-layouts.sidebar-two-level-link>
+                                    <x-layouts.sidebar-two-level-link
+                                        href="{{ route('dashboard.reports.assessments') }}" icon='fas-clipboard-list'
+                                        :active="request()->routeIs('dashboard.reports.assessments')">Laporan Asesmen</x-layouts.sidebar-two-level-link>
+                                    <x-layouts.sidebar-two-level-link href="{{ route('dashboard.reports.chats') }}"
+                                        icon='fas-comments' :active="request()->routeIs('dashboard.reports.chats')">Laporan
+                                        Chat</x-layouts.sidebar-two-level-link>
+                                </x-layouts.sidebar-two-level-link-parent>
+                            @else
+                                <x-layouts.sidebar-link href="{{ route('dashboard') }}" icon='fas-house'
+                                    :active="request()->routeIs('dashboard')">Dashboard</x-layouts.sidebar-link>
+                            @endif
 
                             <x-layouts.sidebar-two-level-link-parent title="Kuisioner" icon="fas-clipboard-list"
                                 :active="request()->routeIs(['kuisioner.index', 'history.index', 'kuisioner.create'])">
@@ -20,38 +40,40 @@
                             </x-layouts.sidebar-two-level-link-parent>
 
                             <x-layouts.sidebar-two-level-link href="{{ route('recommendation.index') }}"
-                                icon='fas-lightbulb' :active="request()->routeIs('recommendation.index')">Recommendation</x-layouts.sidebar-two-level-link>
+                                icon='fas-lightbulb'
+                                :active="request()->routeIs('recommendation.index')">Recommendation</x-layouts.sidebar-two-level-link>
 
-            <!-- Articles & User Management (Admin Only) -->
-            @if (auth()->user()->role->name === 'admin')
-                <x-layouts.sidebar-link href="{{ route('dashboard.articles.index') }}"
-                    icon='fas-newspaper' :active="request()->routeIs('dashboard.articles.*')">Articles</x-layouts.sidebar-link>
-                
-                <x-layouts.sidebar-link href="{{ route('dashboard.users.index') }}"
-                    icon='fas-users' :active="request()->routeIs('dashboard.users.*')">Manajemen User</x-layouts.sidebar-link>
-            @endif                            @if (auth()->user()->isDoctor())
-                                <x-layouts.sidebar-two-level-link-parent title="Chat Pasien" icon='fas-comments'
-                                    :active="request()->routeIs('chat.*')">
-                                    <x-layouts.sidebar-two-level-link href="{{ route('chat.index') }}"
-                                        icon='fas-comments' :active="request()->routeIs('chat.index')">Chat
-                                        Aktif</x-layouts.sidebar-two-level-link>
-                                    <x-layouts.sidebar-two-level-link href="{{ route('chat.history') }}"
-                                        icon='fas-clock-rotate-left' :active="request()->routeIs('chat.history')">Riwayat
-                                        Chat</x-layouts.sidebar-two-level-link>
-                                </x-layouts.sidebar-two-level-link-parent>
-                            @else
-                                <x-layouts.sidebar-two-level-link-parent title="Chat Dokter" icon='fas-user-md'
-                                    :active="request()->routeIs('chat.*') || request()->routeIs('dokter.index')">
-                                    <x-layouts.sidebar-two-level-link href="{{ route('chat.doctors') }}" icon='fas-plus'
-                                        :active="request()->routeIs('chat.doctors')">Chat Baru</x-layouts.sidebar-two-level-link>
-                                    <x-layouts.sidebar-two-level-link href="{{ route('chat.index') }}"
-                                        icon='fas-comments' :active="request()->routeIs('chat.index')">Chat
-                                        Aktif</x-layouts.sidebar-two-level-link>
-                                    <x-layouts.sidebar-two-level-link href="{{ route('chat.history') }}"
-                                        icon='fas-clock-rotate-left' :active="request()->routeIs('chat.history')">Riwayat
-                                        Chat</x-layouts.sidebar-two-level-link>
-                                </x-layouts.sidebar-two-level-link-parent>
-                            @endif
+                            <!-- Articles & User Management (Admin Only) -->
+                            @if (auth()->user()->role->name === 'admin')
+                                <x-layouts.sidebar-link href="{{ route('dashboard.articles.index') }}"
+                                    icon='fas-newspaper' :active="request()->routeIs('dashboard.articles.*')">Articles</x-layouts.sidebar-link>
+
+                                <x-layouts.sidebar-link href="{{ route('dashboard.users.index') }}" icon='fas-users'
+                                    :active="request()->routeIs('dashboard.users.*')">Manajemen User</x-layouts.sidebar-link>
+                                @endif @if (auth()->user()->isDoctor())
+                                    <x-layouts.sidebar-two-level-link-parent title="Chat Pasien" icon='fas-comments'
+                                        :active="request()->routeIs('chat.*')">
+                                        <x-layouts.sidebar-two-level-link href="{{ route('chat.index') }}"
+                                            icon='fas-comments' :active="request()->routeIs('chat.index')">Chat
+                                            Aktif</x-layouts.sidebar-two-level-link>
+                                        <x-layouts.sidebar-two-level-link href="{{ route('chat.history') }}"
+                                            icon='fas-clock-rotate-left' :active="request()->routeIs('chat.history')">Riwayat
+                                            Chat</x-layouts.sidebar-two-level-link>
+                                    </x-layouts.sidebar-two-level-link-parent>
+                                @else
+                                    <x-layouts.sidebar-two-level-link-parent title="Chat Dokter" icon='fas-user-md'
+                                        :active="request()->routeIs('chat.*') || request()->routeIs('dokter.index')">
+                                        <x-layouts.sidebar-two-level-link href="{{ route('chat.doctors') }}"
+                                            icon='fas-plus' :active="request()->routeIs('chat.doctors')">Chat
+                                            Baru</x-layouts.sidebar-two-level-link>
+                                        <x-layouts.sidebar-two-level-link href="{{ route('chat.index') }}"
+                                            icon='fas-comments' :active="request()->routeIs('chat.index')">Chat
+                                            Aktif</x-layouts.sidebar-two-level-link>
+                                        <x-layouts.sidebar-two-level-link href="{{ route('chat.history') }}"
+                                            icon='fas-clock-rotate-left' :active="request()->routeIs('chat.history')">Riwayat
+                                            Chat</x-layouts.sidebar-two-level-link>
+                                    </x-layouts.sidebar-two-level-link-parent>
+                                @endif
                         </ul>
                     </nav>
                 </div>
