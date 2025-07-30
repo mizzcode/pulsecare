@@ -46,6 +46,9 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard Article routes (admin only)
     Route::resource('dashboard/articles', Dashboard\ArticleController::class, ['as' => 'dashboard']);
 
+    // User Management routes (admin only)
+    Route::resource('dashboard/users', Dashboard\UserController::class, ['as' => 'dashboard']);
+
     Route::get('settings/profile', [Settings\ProfileController::class, 'edit'])->name('settings.profile.edit');
     Route::put('settings/profile', [Settings\ProfileController::class, 'update'])->name('settings.profile.update');
     Route::delete('settings/profile', [Settings\ProfileController::class, 'destroy'])->name('settings.profile.destroy');

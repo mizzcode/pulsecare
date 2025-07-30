@@ -22,13 +22,14 @@
                             <x-layouts.sidebar-two-level-link href="{{ route('recommendation.index') }}"
                                 icon='fas-lightbulb' :active="request()->routeIs('recommendation.index')">Recommendation</x-layouts.sidebar-two-level-link>
 
-                            <!-- Articles (Admin Only) -->
-                            @if (auth()->user()->role->name === 'admin')
-                                <x-layouts.sidebar-link href="{{ route('dashboard.articles.index') }}"
-                                    icon='fas-newspaper' :active="request()->routeIs('dashboard.articles.*')">Articles</x-layouts.sidebar-link>
-                            @endif
-
-                            @if (auth()->user()->isDoctor())
+            <!-- Articles & User Management (Admin Only) -->
+            @if (auth()->user()->role->name === 'admin')
+                <x-layouts.sidebar-link href="{{ route('dashboard.articles.index') }}"
+                    icon='fas-newspaper' :active="request()->routeIs('dashboard.articles.*')">Articles</x-layouts.sidebar-link>
+                
+                <x-layouts.sidebar-link href="{{ route('dashboard.users.index') }}"
+                    icon='fas-users' :active="request()->routeIs('dashboard.users.*')">Manajemen User</x-layouts.sidebar-link>
+            @endif                            @if (auth()->user()->isDoctor())
                                 <x-layouts.sidebar-two-level-link-parent title="Chat Pasien" icon='fas-comments'
                                     :active="request()->routeIs('chat.*')">
                                     <x-layouts.sidebar-two-level-link href="{{ route('chat.index') }}"
