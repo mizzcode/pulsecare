@@ -66,18 +66,9 @@ window.Pusher = Pusher;
 Pusher.logToConsole = false;
 
 // Check if WebSocket configuration is available
-const hasWebSocketConfig = import.meta.env.VITE_REVERB_APP_KEY && 
-                           import.meta.env.VITE_REVERB_HOST && 
-                           import.meta.env.VITE_REVERB_PORT;
-
-// Debug logging for WebSocket configuration
-console.log('🔍 WebSocket Debug Info:', {
-    VITE_REVERB_APP_KEY: import.meta.env.VITE_REVERB_APP_KEY,
-    VITE_REVERB_HOST: import.meta.env.VITE_REVERB_HOST,
-    VITE_REVERB_PORT: import.meta.env.VITE_REVERB_PORT,
-    VITE_REVERB_SCHEME: import.meta.env.VITE_REVERB_SCHEME,
-    hasWebSocketConfig: hasWebSocketConfig
-});
+const hasWebSocketConfig = import.meta.env.VITE_REVERB_APP_KEY &&
+    import.meta.env.VITE_REVERB_HOST &&
+    import.meta.env.VITE_REVERB_PORT;
 
 // Only initialize Echo if WebSocket configuration is available
 if (hasWebSocketConfig && import.meta.env.VITE_REVERB_APP_KEY !== 'null') {
